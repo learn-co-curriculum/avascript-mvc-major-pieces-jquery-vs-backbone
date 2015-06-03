@@ -1,71 +1,88 @@
-a history of software
-* classical MVC
-  * Models represent the domain-specific knowledge and data in an application. Think of this as being a ‘type’ of data you can model — like a User, Photo, or Todo note. Models can notify observers when their state changes.
-  * Views typically constitute the user interface in an application (e.g., markup and templates), but don’t have to be. They observe Models, but don’t directly communicate with them.
-  * Controllers handle input (e.g., clicks, user actions) and update Models.
 
-User Input, User Interface(templates), Data**
+What are the core components of the JSMV* frameworks
 
-* Thus, in an MVC application, user input is acted upon by Controllers which update Models. Views observe Models and update the user interface when changes occur.
-* Historial GUIs
-  * The first GUI’s in the 70’s used a pattern called Seperated Presentation
-    * used as a means to make a clear division between domain objects which modeled concepts in the real world (e.g., a photo, a person) and the presentation objects which were rendered to the user’s screen.
-  * The Smalltalk-80 implementation of MVC took this concept further and had an objective of separating out the application logic from the user interface. The idea was that decoupling these parts of the application would also allow the reuse of Models for other interfaces in the application.
-    * A Domain element was known as a Model and was ignorant of the user-interface (Views and Controllers)
-    * Presentation was taken care of by the View and the Controller, but there wasn’t just a single View and Controller. A View-Controller pair was required for each element being displayed on the screen.
-    * The Controller’s role in this pair was handling user input (such as key-presses and click events) and doing something sensible with them.
-    * The Observer pattern was used to update the View whenever the Model changed.
-  * web apps start being written
-    * Rasmus lerdorf
-    * mysql/php
-    ![Rails Flavored MVC] (http://addyosmani.github.io/backbone-fundamentals/img/rails_mvc.png)
-    
-    * DHH makes rails flavored MVC
-      * Models represent the data in an application and are typically used to manage rules for interacting with a specific database table. You generally have one table corresponding to one model with much of your application’s business logic living within these models.
-      * Views represent your user interface, often taking the form of HTML that will be sent down to the browser. They’re used to present application data to anything making requests from your application.
-      * Controllers offer the glue between models and views. Their responsibility is to process requests from the browser, ask your models for data and then supply this data to views so that they may be presented to the browser.
-  * Rails is actually Model2
-    *[model2 vs mvc](http://stackoverflow.com/questions/796508/what-is-the-actual-difference-between-mvc-and-mvc-model2)
-    * One reason for this is that Rails does not notify views from the model or controllers - it just passes model data directly to the view.
-  * Front Controller
-    * This pattern layers an MVC stack behind a single point of entry
-    * When the Front Controller receives an HTTP request it analyzes it and decides which class (Controller) and method (Action) to invoke.
-  * Classical Server side MVC
-    ![Server Side MVC](http://addyosmani.github.io/backbone-fundamentals/img/webmvcflow_bacic.png)
-  * initially with server side logic only, we rendered a full HTML page every time a user did something (clicked a link etc)
-  * HTTP requests are too slow to make desktop speed apps in the browser, so we need to send less data, rendering the page is slow
-    * cache all the things
-    * make less requests
-    * send less data
-    * don’t rerender the page, only what has changed
-      * jquery -> ajax
-        * spaghetti code!
-        * the DOM becomes a repository for state, how do you manage the complexity of dependent states in your UI
-  * how do we make web apps more like desktop apps?
-    * separate the client and the server
-    * make the server just serve data, move the “app” to the client
-    * MC on the server side AND MV* on the client side
-  * tic tac toe
-    * written in jquery
-    * then a clean separation of concerns
-  * backbone
-    * models
-    * computed properties
-    * presentation related properties
-      * active/selected
-      * maybe these go in a “presenter” or a viewmodel
-    * events/pubsub/observer pattern
-      * decouples views from models
-      * many views can listen to one model
-        * example of an inbox
-    * router/template swapper/state manager
-      * compose a view
-    * data binding
-      * one way
-      * two way
-        * [angular](http://angular.github.io/angular-phonecat/step-4/app/)
-        * [good use case] http://n12v.com/2-way-data-binding/>
-        * With 2-way data binding, your UI can provide short feedback loops on inputs from users. Observing input on forms are common when building browser editors, or advanced control elements, like sliders that are coupled with numeric input.  
+  * Data Binding between HTML and a client-side JavaScript object model
+  *     * backbone has no data binding
+    * two way(everyone else)
+  * View Templates
+  *     * declarative DOM based (angular)
+    *       * so here we’re decorating the DOM language itself
+    * string templating based (underscore, mustache, handlebars)
+    *       * here were building up giant strings of HTML by dynamically replacing pieces of a string and then injecting into a DOM
+  * Model(observable:change tracking)
+  *     * access model changes through an interface so that the framework knows when to rerender views (react, backbone, spine, knockout)
+    * dirty checking (angular)
+  * Data Storage (local or through a web server to a database)
+  *     * autosync with restful services
+    * implement your own ajax which should return json
+    * allow either
+  * URL Routing (keeping the back button working and search engines happy)
+  *     * dealing with the fact that you need to track state transitions and there are no URLs
+    * Routing, at a minimum maps your URLs to actions, but sometimes goes as far as implementing a full “state machine” design pattern for managing state transitions within a view.
 
-      * Backbone doesn’t have automatic data-binding but it is possible to do manually. In practice, I’ve found one-way data-binding which updates the view when changes are made to the model to be extremely useful. Data-binding from the view to the model real-world use cases are less common (for example, you want a live preview of how text will look as the user types text in an editor). It can be helpful to have binding from the view to the model but frequently the view change is initiated from user input and you want to do other logic before or in addition to actually changing the model. For example, validating input before changing or filtering a list in addition to remembering the current filter.
+  
+
+
+  * Is it better to compose your overall solution with small libraries rather than betting the house on a single framework which could fall out of favor
+  *     * this leads to a good discussion of technology choices, open source, communities etc
+    *       * for example, angular 1.3 -> 2.0 will be breaking changes. people are fucked and angry.
+      * use react for the V in MVC, now you can easily swap out how you do your rendering of views. when react comes out and blows your other rendering solution away, you are modular, and not tied to one framework
+    * so you could use knockout.js for data binding, durandalJS for screen management and composition and sammy.js for routing
+    * you could use backbone which does not give you data binding, really just introduces a way to organize your code and gives you events to hook into to to update the view (one way data binding) when the model changes. or you could go to marionette which uses backbone as a base and creates a more full featured framework around it
+
+  
+
+
+  * How do we show the problems JSMVC tries to solve?
+  * Look at a note taking app
+  * Jquery version
+  *     * <http://jsfiddle.net/cmckeachie/Lh24U/>
+  * Backbone version
+  *     * <http://jsfiddle.net/cmckeachie/AzC59/>
+  * Problem: HTML in JavaScript
+  *     * Every time a note is added to the list on the user interface a new item (<li></li>) is added to the unordered list (<ul>). This item template is hard-coded in JavaScript in the jQuery version below.
+  * Solution: Templates and Data binding
+  *     * The solution is to move the item template out of the JavaScript into an HTML view template as we did in the Backbone version:
+  * This isn't too big a deal, because the template is so simple but templates quickly become more complex in my experience. Let's imagine a few ways this template might become more complex:
+  *     * List items may need CSS classes but which classes the item gets depends on whether it's an item just added, or an item being edited etc...
+    * List items may have another list nested inside of them, for example a series of posts or questions with comments. The nested list of comments may be complex enough to need its own template
+    * List items may each have a form with several inputs and buttons
+    * When this complexity comes in it becomes a mess to manage these HTML fragments constantly escaping back and forth between data and markup and either loading these fragments into jQuery wrapped DOM elements to modify them easily or doing string replacement with regular expressions. Templates solve this problem and make the code much easier to follow and less complex.
+  * Problem: HTML Templates Duplicated on Client and Server (so you need to keep the templates in sync on the server and the client)
+  *     * In the jQuery example the notes were originally rendered from the server so the list item has a template on the server which probably looks something like this:
+
+<ul>
+
+<% foreach (note in notes)%>
+
+<li data-id='<% = [note.id](http://note.id/) %>'> <% = note.text %> <a class="edit"
+
+href="#">edit</a></li>
+
+<% } %>
+
+</ul>
+
+  * Solution: Thin-Server Architecture
+  *     * "Thin-server architecture" is the idea that you have a thin RESTful data API on the server that serves multiple rich or thick clients. For example, a single-page JavaScript application and a native mobile application get the same data from an API. Thin server architecture solves the duplicate template problem by often needing only one template which is interpreted on the client in JavaScript. All of the JavaScript MV* frameworks assume the use of a "thin-server architecture."
+  * Problem: Views and Model Data are too tightly coupled
+  *     * In a server-side plus jQuery architecture, the "application state" is frequently stored in the DOM in the ID attribute, class or a custom attribute of an element. The most common example of this is unique IDs from a database being stored as attributes in the DOM so they can be referenced later to pull back the other "application state" or model data. This tight coupling between the user interface and data becomes a problem when a designer or developer changes a CSS class name or ID on an HTML element and breaks the application. I've learned over the years that having more than one copy of data in an application frequently results in one of the copies getting out of sync and causing bugs.
+    * Blake’s note: Hard to change views, slow to search through the DOM rather than in pure JS, Storing state and data in HTML is a bad idea, because it makes it hard to keep multiple views that represent the same data in sync. (multiple views that need to change based on one model/piece of data)
+  * Solution: Models and Data binding
+  *     * With client-side MVC frameworks, that "application state" is managed in JavaScript objects in memory similar to how a traditional desktop application manages its "application state". The data-id attribute isn't even needed in the Backbone example.
+  * Problem: Organization and Maintenance
+  *     * The jQuery example code is not organized because all the code is contained in a few functions and those functions are not organized to have only one reason to change--i.e. a single responsibility. The view and model data logic are inter-tangled. The code used to render the entire page or view (HTML) and all the events triggered by that large view as well as all code to manage the data needed for the view including how to store it and retrieve it is in one place. That is a lot of responsibility for those couple functions. Imagine if you wrote that type of jQuery code on the server side. You wouldn’t, you would have a view or partial with your html, a model to represent your data, and a controller to react to user interface events and bind your model together with the view. You wouldn't put all the code in one render method (which is basically what the jQuery example does).
+  * Solution: Views (in Backbone) or Controllers, Models, Events
+  *     * Models can be reused with multiple views
+    * Events and Observables. One feature that makes it easier for these views and models to live separately is that they can send events back and forth. The most common example of this is the observer pattern where change tracking is enabled on a model and change events such as "add" or "change" fire and the views can listen for these and take appropriate action such as re-rendering.
+  * Problem: Back Button Broken, Bookmarking doesn’t work
+  *     * Another challenge is state management. In a traditional server-side web application "state" is commonly maintained in the URL of the web browser. When you reload parts of the HTML on a page but don't update the URL of the web browser the back button may not work in all the ways useful to the end users without careful consideration. Let's say you want to change from a list view to a list item details view you want the url to change so that users can bookmark and send each other direct links to the list item details.
+  * Solution: Routers
+  * Problem: Serve Multiple Clients
+  *     * How do you scale your server side to serve multiple clients?
+
+  * Solution: Server as API
+  *     * benefit of this is you can use one API for multiple clients (iOS, mobile, desktop)
+
+  
 
