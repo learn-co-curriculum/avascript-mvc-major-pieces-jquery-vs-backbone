@@ -12,3 +12,4 @@ tags: lecture
 ## Summary / README / Transcript
 
 ## Check For Understanding with mini-Lab / Quiz
+<a href='https://learn.co/lessons/javascript-mvc-lecture-two-major-pieces-jquery-vs-backbone' data-visibility='hidden'>View this lesson on Learn.co</a>
